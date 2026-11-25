@@ -36,6 +36,7 @@
 }
 html{scroll-padding-top:env(safe-area-inset-top,0px)}
 *,*::before,*::after{box-sizing:border-box}
+[hidden]{display:none!important}
 body{margin:0;background:var(--bg);color:var(--ink);font-family:var(--body);font-size:16px;line-height:1.5}
 h1,h2,h3{font-family:var(--display);line-height:1.1;margin:0}
 button,input,select{font:inherit;color:inherit}
@@ -66,7 +67,7 @@ main{padding:24px 0 56px}
 
 /* game chips */
 .games{display:flex;gap:8px;flex-wrap:wrap;margin-top:14px}
-.gchip{display:flex;align-items:center;gap:8px;min-height:44px;padding:6px 14px 6px 6px;border-radius:14px;border:2px solid var(--line);background:var(--chip);cursor:pointer;font-weight:600;font-size:.92rem;text-align:left}
+.gchip{position:relative;display:flex;align-items:center;gap:8px;min-height:44px;padding:6px 14px 6px 6px;border-radius:14px;border:2px solid var(--line);background:var(--chip);cursor:pointer;font-weight:600;font-size:.92rem;text-align:left}
 .gchip .lt{width:32px;height:32px;border-radius:10px;display:grid;place-items:center;background:var(--header);color:#FFFFFF;font-family:var(--display);font-weight:800;font-size:1.1rem;flex-shrink:0}
 .gchip[aria-pressed="true"]{border-color:var(--ink);background:var(--surface-2)}
 .gchip .st{width:10px;height:10px;border-radius:50%;background:var(--line);flex-shrink:0}
@@ -101,6 +102,7 @@ table{border-collapse:collapse;width:100%}
 .pos{font-family:var(--display);font-weight:800;font-size:1.35rem;white-space:nowrap}
 .pts{font-family:var(--display);font-weight:800;font-size:1.35rem}
 .tb{display:flex;flex-direction:column;gap:2px}
+.tb[hidden]{display:none}
 .tb label{font-size:.75rem;font-weight:700;color:var(--warn-ink)}
 .tb input{border-color:#E09A00}
 .err{color:var(--danger);font-size:.8rem;font-weight:600;display:block;margin-top:2px}
@@ -165,6 +167,61 @@ details.cfg summary{cursor:pointer;font-weight:700;min-height:44px;display:flex;
 .modal h2{font-size:1.6rem}
 .modal ol{margin:0;padding-left:22px}
 .modal .actions{justify-content:flex-end}
+.tfield{display:inline-flex;align-items:center;gap:6px}
+.tfield input{width:64px;text-align:center}
+.tfield span{font-family:var(--display);font-weight:800;font-size:1.3rem}
+input.place{width:72px;text-align:center}
+.p-game .scroll{overflow:visible}
+.res,.res tbody{display:block}
+.res thead{display:none}
+.res tr{display:grid;grid-template-columns:minmax(0,1fr) auto auto;grid-template-areas:"grp pos pts" "seg seg seg" "val val val";gap:12px;padding:14px;border:1px solid var(--line);border-radius:18px;background:var(--surface-2)}
+.res td{display:block;padding:0;border:0}
+.res td.c-grp{grid-area:grp}
+.res td.pos{grid-area:pos;align-self:center;font-size:1.2rem}
+.res td.pts{grid-area:pts;align-self:center;font-size:1.2rem;text-align:right}
+.res td.pts:not(:empty)::after{content:" pts";font-family:var(--body);font-size:.8rem;font-weight:600;color:var(--ink-2)}
+.res td.c-seg{grid-area:seg}
+.res td.c-val{grid-area:val}
+.res td.c-val:has(input:disabled):not(:has(.tb:not([hidden]))){display:none}
+.res tbody{display:grid;grid-template-columns:repeat(auto-fill,minmax(290px,1fr));gap:12px}
+.vlab{display:block;font-size:.8rem;font-weight:700;color:var(--ink-2);margin-bottom:4px}
+.res .seg{display:flex;width:100%}
+.res .seg button{flex:1 1 0;min-height:46px}
+@media (max-width: 720px){
+  .wrap{padding:0 14px}
+  .bunting{height:46px}
+  header.top{padding-bottom:16px}
+  .top h1{font-size:1.9rem}
+  .top .sub{font-size:1rem}
+  .steps{width:100%}
+  .steps li{flex:1 1 0;justify-content:flex-start;font-size:.88rem;padding:6px 10px 6px 6px}
+  main{padding:16px 0 40px}
+  .grid{flex-direction:column;align-items:stretch;gap:16px}
+  .col-main,.col-side{display:contents}
+  .p-chips{order:1}.p-game{order:2}.p-board{order:3}.p-matrix{order:4}.p-cfg{order:5}
+  .panel{padding:16px;border-radius:18px;min-width:0;max-width:100%}
+  .panel h2{font-size:1.35rem}
+  .games{flex-wrap:nowrap;overflow-x:auto;scroll-snap-type:x mandatory;margin:12px -16px 0;padding:0 16px 6px;-webkit-overflow-scrolling:touch}
+  .gchip{flex-shrink:0;scroll-snap-align:start}
+  .gamehead h3{font-size:1.35rem}
+  .biglt{width:48px;height:48px;font-size:1.6rem}
+  .mode,.mode select{width:100%}
+  .seg{display:flex;width:100%}
+  .seg button{flex:1 1 0;min-height:48px;font-size:1rem}
+  .tfield input{width:76px;min-height:48px;font-size:1.1rem}
+  .board li{grid-template-columns:36px minmax(0,1fr) auto;padding:10px}
+  .board .rk{font-size:1.35rem}
+  .board .tot{font-size:1.5rem}
+  .ptsgrid{grid-template-columns:repeat(3,minmax(0,1fr))}
+  .podium{gap:16px}
+  .prize{flex-basis:100%;border-radius:20px}
+  .prize .band h2{font-size:1.45rem}
+  .prize .body{padding:16px}
+  .actions .btn{flex:1 1 100%}
+  #view2 > .panel:first-child{flex-direction:column;align-items:stretch}
+  .rest{grid-template-columns:minmax(0,1fr)}
+  .btn{font-size:1.05rem}
+}
 .sr{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}
 @media (prefers-reduced-motion: reduce){*{transition:none!important;animation:none!important}}
 </style>
@@ -187,19 +244,19 @@ details.cfg summary{cursor:pointer;font-weight:700;min-height:44px;display:flex;
 <main class="wrap">
   <section id="view1" class="grid" aria-labelledby="t1">
     <div class="col-main">
-      <div class="panel">
+      <div class="panel p-chips">
         <h2 id="t1">Resultados por juego</h2>
         <p class="muted small" style="margin:4px 0 0">Elige un juego y marca si cada grupo cumplió. El tiempo es opcional: si lo anotas, ordena a los grupos que cumplieron y gana el menor tiempo.</p>
         <div class="games" id="gameChips" role="group" aria-label="Juegos"></div>
       </div>
-      <div class="panel" id="gamePanel"></div>
-      <div class="panel">
+      <div class="panel p-game" id="gamePanel"></div>
+      <div class="panel p-matrix">
         <h2>Puntos por juego</h2>
         <div class="scroll" style="margin-top:12px"><table class="matrix" id="matrix"></table></div>
       </div>
     </div>
     <aside class="col-side">
-      <div class="panel">
+      <div class="panel p-board">
         <h2>Tabla de posiciones</h2>
         <ol class="board" id="board"></ol>
         <div id="ties"></div>
@@ -207,7 +264,7 @@ details.cfg summary{cursor:pointer;font-weight:700;min-height:44px;display:flex;
         <button class="btn primary block" id="confirmBtn" type="button">Confirmar ganadores</button>
         <p class="hint" id="confirmedNote" hidden>Conteo confirmado. Para cambiar resultados, reabre el conteo desde el paso 2.</p>
       </div>
-      <div class="panel">
+      <div class="panel p-cfg">
         <details class="cfg">
           <summary>Puntos por puesto en cada juego</summary>
           <p class="muted small" style="margin:4px 0 0">Un grupo que no cumple el juego recibe 0 puntos.</p>
@@ -358,21 +415,34 @@ function renderChips(sd){
     const lab=r.complete?'completo':(started?'en curso':'sin datos');
     return '<button type="button" class="gchip" aria-pressed="'+(S.sel===g.id)+'" data-g="'+g.id+'"><span class="lt">'+g.id+'</span>'+esc(g.name)+'<span class="st '+st+'" title="'+lab+'"></span><span class="sr">('+lab+')</span></button>';}).join('');
 }
+function tfield(id,val,attrs,dis,label){
+  let m='',sec='';const v=String(val||'');
+  if(v.includes(':')){const p=v.split(':');m=p[0];sec=p[1];}
+  else if(v){const n=parseFloat(v);if(!isNaN(n)){m=String(Math.floor(n/60));sec=String(Math.round(n%60)).padStart(2,'0');}}
+  return '<div class="tfield" '+attrs+' role="group" aria-label="'+esc(label)+'"><input type="text" inputmode="numeric" pattern="[0-9]*" maxlength="3" autocomplete="off" id="'+id+'-m" data-tp="m" value="'+esc(m)+'" placeholder="min" aria-label="Minutos"'+dis+'><span aria-hidden="true">:</span><input type="text" inputmode="numeric" pattern="[0-9]*" maxlength="2" autocomplete="off" id="'+id+'-s" data-tp="s" value="'+esc(sec)+'" placeholder="seg" aria-label="Segundos"'+dis+'></div>';
+}
+function tval(w){
+  const m=w.querySelector('[data-tp="m"]').value.replace(/\D/g,''),sec=w.querySelector('[data-tp="s"]').value.replace(/\D/g,'');
+  if(m===''&&sec==='')return '';
+  return (m||'0')+':'+(sec===''?'00':(sec.length===1?'0'+sec:sec));
+}
 function renderGame(){
   const gm=GAMES.find(g=>g.id===S.sel),st=S.games[gm.id],dis=S.confirmed?' disabled':'';
   const timeMode=st.mode==='time';
   let h='<div class="gamehead"><div class="title"><span class="biglt" aria-hidden="true">'+gm.id+'</span><div><h3>'+esc(gm.name)+'</h3><div class="meta"><span class="tag">'+gm.min+' minutos</span><span class="tag">Responsable: '+esc(gm.resp)+'</span></div></div></div>'+
   '<div class="mode"><label for="modeSel">Cómo se define el puesto</label><select id="modeSel"'+dis+'><option value="time"'+(timeMode?' selected':'')+'>Por tiempo (gana el menor)</option><option value="place"'+(!timeMode?' selected':'')+'>Puesto anotado a mano (1 a 5)</option></select></div></div>';
-  h+='<div class="scroll"><table class="res"><thead><tr><th scope="col">Grupo</th><th scope="col">¿Cumplió?</th><th scope="col">'+(timeMode?'Tiempo (min:seg)':'Puesto')+'</th><th scope="col">Puesto</th><th scope="col">Puntos</th></tr></thead><tbody>';
+  h+='<div class="scroll"><table class="res"><thead><tr><th scope="col">Grupo</th><th scope="col">¿Cumplió?</th><th scope="col">'+(timeMode?'Tiempo (opcional)':'Puesto')+'</th><th scope="col">Puesto</th><th scope="col">Puntos</th></tr></thead><tbody>';
   GROUPS.forEach(g=>{const e=st.res[g.id]||{};
-    h+='<tr data-row="'+g.id+'"><td>'+pill(g.id)+'<span class="verif">Verifica: '+esc(g.verifier)+'</span></td>'+
-    '<td><div class="seg" role="group" aria-label="¿'+esc(g.name)+' cumplió?"><button type="button" class="ok" data-s="ok" aria-pressed="'+(e.s==='ok')+'"'+dis+'>Cumplió</button><button type="button" class="no" data-s="no" aria-pressed="'+(e.s==='no')+'"'+dis+'>No cumplió</button></div></td>'+
-    '<td><label class="sr" for="v-'+g.id+'">'+(timeMode?'Tiempo':'Puesto')+' de '+esc(g.name)+'</label><input type="text" inputmode="decimal" id="v-'+g.id+'" data-f="v" value="'+esc(e.v||'')+'" placeholder="'+(timeMode?'4:35':'1')+'"'+((e.s!=='ok'||S.confirmed)?' disabled':'')+'><span class="err" data-err></span>'+
-    '<div class="tb" data-tbwrap hidden style="margin-top:8px"><label for="tb-'+g.id+'">Tiempo de desempate</label><input type="text" inputmode="decimal" id="tb-'+g.id+'" data-f="tb" value="'+esc(e.tb||'')+'" placeholder="0:45"'+dis+'></div></td>'+
+    const vdis=(e.s!=='ok'||S.confirmed)?' disabled':'';
+    const vField=timeMode?tfield('v-'+g.id,e.v,'data-f="v"',vdis,'Tiempo de '+g.name):'<input type="text" class="place" inputmode="numeric" pattern="[0-9]*" maxlength="1" id="v-'+g.id+'" data-f="v" value="'+esc(e.v||'')+'" placeholder="1" aria-label="Puesto de '+esc(g.name)+'"'+vdis+'>';
+    h+='<tr data-row="'+g.id+'"><td class="c-grp">'+pill(g.id)+'<span class="verif">Verifica: '+esc(g.verifier)+'</span></td>'+
+    '<td class="c-seg"><div class="seg" role="group" aria-label="¿'+esc(g.name)+' cumplió?"><button type="button" class="ok" data-s="ok" aria-pressed="'+(e.s==='ok')+'"'+dis+'>Cumplió</button><button type="button" class="no" data-s="no" aria-pressed="'+(e.s==='no')+'"'+dis+'>No cumplió</button></div></td>'+
+    '<td class="c-val"><span class="vlab">'+(timeMode?'Tiempo (opcional)':'Puesto en el juego')+'</span>'+vField+'<span class="err" data-err></span>'+
+    '<div class="tb" data-tbwrap hidden style="margin-top:8px"><span class="vlab" style="display:block;color:var(--warn-ink)">Tiempo de desempate</span>'+tfield('tb-'+g.id,e.tb,'data-f="tb"',dis,'Tiempo de desempate de '+g.name)+'</div></td>'+
     '<td class="pos" data-pos></td><td class="pts" data-pts></td></tr>';
   });
   h+='</tbody></table></div><div id="gameNote"></div>';
-  h+='<p class="hint">'+(timeMode?'El tiempo es opcional. Escríbelo como 4:35 (4 minutos 35 segundos) o solo en segundos, por ejemplo 275. Los grupos que cumplieron sin tiempo anotado comparten el puesto siguiente a los que sí tienen tiempo.':'Usa este modo en juegos sin cronómetro, como jalar la soga: anota el puesto final de cada grupo.')+'</p>';
+  h+='<p class="hint">'+(timeMode?'El tiempo es opcional. Anota minutos y segundos en sus casillas. Los grupos que cumplieron sin tiempo anotado comparten el puesto siguiente a los que sí tienen tiempo.':'Usa este modo en juegos sin cronómetro, como jalar la soga: anota el puesto final de cada grupo.')+'</p>';
   $('gamePanel').innerHTML=h;
 }
 function updateGame(sd){
@@ -380,37 +450,40 @@ function updateGame(sd){
   GROUPS.forEach(g=>{const row=document.querySelector('[data-row="'+g.id+'"]');if(!row)return;const x=r.rows[g.id];
     row.querySelector('[data-pos]').textContent=x.status==='no'?'—':(x.pos?ord(x.pos)+(x.noTime?' (sin tiempo)':(x.shared?' (empate)':'')):'');
     row.querySelector('[data-pts]').textContent=x.status==='no'?'0':(x.pos?x.pts:'');
-    row.querySelector('[data-err]').textContent=x.bad?(timeMode?'Usa el formato 4:35':'Escribe un número del 1 al 5'):'';
+    row.querySelector('[data-err]').textContent=x.bad?(timeMode?'Los segundos van de 0 a 59':'Escribe un número del 1 al 5'):'';
     row.querySelector('[data-tbwrap]').hidden=!(x.status==='ok'&&x.tie);
   });
   const n=$('gameNote');
   n.innerHTML=r.unresolved?'<div class="note">Hay grupos con el mismo tiempo y por ahora comparten puesto y puntos. Si hacen un desempate, anota su tiempo y el menor gana el puesto; si no, puedes continuar así.</div>':'';
 }
+function joinY(a){return a.length<2?a.join(''):a.slice(0,-1).join(', ')+' y '+a[a.length-1];}
+function allDone(sd){return GAMES.every(g=>sd.res[g.id].complete);}
 function renderBoard(sd){
+  const done=allDone(sd);
   $('board').innerHTML=sd.order.map(id=>{const p=sd.pos[id];const tied=sd.order.filter(o=>sd.pos[o]===p).length>1;
-    return '<li class="'+(p===1&&!tied?'first':'')+'"><span class="rk">'+ord(p)+'</span><span>'+pill(id)+'<span class="out">'+(tied?'Empate por resolver':esc(OUT[p]))+'</span></span><span class="tot">'+sd.tot[id]+'<small>puntos</small></span></li>';}).join('');
+    return '<li class="'+(p===1&&!tied?'first':'')+'"><span class="rk">'+ord(p)+'</span><span>'+pill(id)+'<span class="out">'+(tied?(done?'Empate por resolver':'Empatados por ahora'):esc(OUT[p]))+'</span></span><span class="tot">'+sd.tot[id]+'<small>puntos</small></span></li>';}).join('');
   const dis=S.confirmed?' disabled':'';
-  $('ties').innerHTML=sd.ties.filter(t=>t.relevant).map(t=>{
+  $('ties').innerHTML=(done?sd.ties:[]).filter(t=>t.relevant).map(t=>{
     const tb=t.tb||{};
     const opts=GAMES.map(g=>'<option value="'+g.id+'"'+(tb.game===g.id?' selected':'')+'>'+g.id+' · '+esc(g.name)+'</option>').join('');
-    return '<div class="tiebox" data-tie="'+t.key+'"><h3>Empate en el '+ord(t.start)+' puesto</h3><p class="small muted" style="margin:0">'+t.set.map(id=>esc(G(id).name)).join(' y ')+' tienen los mismos puntos. Elige el juego que van a repetir y anota su tiempo; el menor tiempo gana.</p>'+
+    return '<div class="tiebox" data-tie="'+t.key+'"><h3>Empate en el '+ord(t.start)+' puesto</h3><p class="small muted" style="margin:0">'+esc(joinY(t.set.map(id=>G(id).name)))+' tienen los mismos puntos. Elige el juego que van a repetir y anota su tiempo; el menor tiempo gana.</p>'+
     '<div class="mode"><label for="tbg-'+t.key+'">Juego de desempate</label><select id="tbg-'+t.key+'" data-tbg'+dis+'><option value="">Elegir juego</option>'+opts+'</select></div>'+
-    '<div class="tierow">'+t.set.map(id=>'<div class="mode"><label for="tbt-'+t.key+'-'+id+'">'+esc(G(id).name)+'</label><input type="text" inputmode="decimal" id="tbt-'+t.key+'-'+id+'" data-tbt="'+id+'" value="'+esc((tb.times||{})[id]||'')+'" placeholder="1:20"'+dis+'></div>').join('')+'</div>'+
+    '<div class="tierow">'+t.set.map(id=>'<div class="mode"><span class="small" style="font-weight:600;color:var(--ink-2)">'+esc(G(id).name)+'</span>'+tfield('tbt-'+t.key+'-'+id,(tb.times||{})[id],'data-tbt="'+id+'"',dis,'Tiempo de desempate de '+G(id).name)+'</div>').join('')+'</div>'+
     (t.resolved?'<p class="small" style="margin:0;color:var(--grass);font-weight:700">Desempate resuelto</p>':'')+'</div>';
   }).join('');
 }
 function blockers(sd){
   const b=[];
   GAMES.forEach(g=>{const r=sd.res[g.id];
-    if(r.pending.length)b.push(g.id+' · '+g.name+': falta registrar '+r.pending.map(id=>G(id).name).join(', '));
+    if(r.pending.length)b.push(g.id+' · '+g.name+': '+(r.pending.length===GROUPS.length?'sin resultados':'falta '+joinY(r.pending.map(id=>G(id).name))));
   });
-  sd.ties.filter(t=>t.relevant&&!t.resolved).forEach(t=>b.push('Empate en el '+ord(t.start)+' puesto de la tabla general'));
+  (allDone(sd)?sd.ties:[]).filter(t=>t.relevant&&!t.resolved).forEach(t=>b.push('Empate en el '+ord(t.start)+' puesto de la tabla general'));
   return b;
 }
 function renderSide(sd){
   renderBoard(sd);
   const b=blockers(sd);
-  $('pending').innerHTML=S.confirmed?'':b.slice(0,8).map(x=>'<li>'+esc(x)+'</li>').join('')+(b.length>8?'<li>y '+(b.length-8)+' pendientes más</li>':'');
+  $('pending').innerHTML=S.confirmed?'':b.slice(0,8).map(x=>'<li>'+esc(x)+'</li>').join('')+(b.length>8?'<li>y '+(b.length-8)+(b.length-8===1?' pendiente más':' pendientes más')+'</li>':'');
   $('confirmBtn').disabled=S.confirmed||b.length>0;
   $('confirmBtn').hidden=S.confirmed;
   $('confirmedNote').hidden=!S.confirmed;
@@ -437,19 +510,21 @@ $('gamePanel').addEventListener('click',e=>{
   const gid=b.closest('[data-row]').dataset.row;const res=S.games[S.sel].res;const e0=res[gid]||{};
   e0.s=(e0.s===b.dataset.s)?undefined:b.dataset.s;if(!e0.s)delete e0.s;res[gid]=e0;save();
   const row=b.closest('[data-row]');row.querySelectorAll('[data-s]').forEach(x=>x.setAttribute('aria-pressed',String(x.dataset.s===e0.s)));
-  const inp=row.querySelector('[data-f="v"]');inp.disabled=e0.s!=='ok';if(e0.s==='ok')inp.focus();
+  const ins=row.querySelectorAll('[data-f="v"] input, input[data-f="v"]');ins.forEach(i=>i.disabled=e0.s!=='ok');
   refresh(false);
 });
 $('gamePanel').addEventListener('input',e=>{
-  const f=e.target.dataset.f;if(!f)return;const gid=e.target.closest('[data-row]').dataset.row;
-  const res=S.games[S.sel].res;res[gid]=res[gid]||{};res[gid][f]=e.target.value;save();refresh(false);
+  const w=e.target.closest('[data-f]');if(!w)return;const f=w.dataset.f;const gid=w.closest('[data-row]').dataset.row;
+  const val=w.classList.contains('tfield')?tval(w):e.target.value;
+  if(e.target.dataset.tp==='m'&&/^\d{2}$/.test(e.target.value)){const nx=w.querySelector('[data-tp="s"]');if(nx)nx.focus();}
+  const res=S.games[S.sel].res;res[gid]=res[gid]||{};res[gid][f]=val;save();refresh(false);
 });
 $('gamePanel').addEventListener('change',e=>{
   if(e.target.id==='modeSel'){S.games[S.sel].mode=e.target.value;Object.values(S.games[S.sel].res).forEach(r=>{delete r.v;delete r.tb;});save();refresh(true);return;}
 });
 $('ties').addEventListener('change',e=>{const box=e.target.closest('[data-tie]');if(!box)return;const k=box.dataset.tie;S.overallTb[k]=S.overallTb[k]||{times:{}};
   if(e.target.matches('[data-tbg]')){S.overallTb[k].game=e.target.value;save();}});
-$('ties').addEventListener('input',e=>{const box=e.target.closest('[data-tie]');if(!box||!e.target.dataset.tbt)return;const k=box.dataset.tie;S.overallTb[k]=S.overallTb[k]||{times:{}};S.overallTb[k].times=S.overallTb[k].times||{};S.overallTb[k].times[e.target.dataset.tbt]=e.target.value;save();
+$('ties').addEventListener('input',e=>{const box=e.target.closest('[data-tie]');const w=e.target.closest('[data-tbt]');if(!box||!w)return;const k=box.dataset.tie;S.overallTb[k]=S.overallTb[k]||{times:{}};S.overallTb[k].times=S.overallTb[k].times||{};S.overallTb[k].times[w.dataset.tbt]=tval(w);save();
   const sd=standings();renderBoard(sd);/* keep focus: re-find */const el=document.getElementById(e.target.id);if(el){el.focus();const v=el.value;el.setSelectionRange(v.length,v.length);}renderChips(sd);const b=blockers(sd);$('pending').innerHTML=b.slice(0,8).map(x=>'<li>'+esc(x)+'</li>').join('');$('confirmBtn').disabled=b.length>0;});
 $('ptsgrid').addEventListener('input',e=>{const i=e.target.dataset.pi;if(i==null)return;const v=parseInt(e.target.value,10);S.points[+i]=isNaN(v)?0:Math.max(0,v);save();refresh(false);});
 let mResolve=null,mPrev=null;
@@ -479,7 +554,7 @@ function renderRaffle(){
     let h='<article class="prize"><div class="band '+gid+'" style="background:var(--'+gid+')"><div><h2>'+(slot==='first'?'1° lugar':'2° lugar')+' · '+esc(g.name)+'</h2><span>'+S.final.tot[gid]+' puntos · '+g.members.length+' integrantes</span></div><strong style="font-family:var(--display);font-size:1.3rem">'+total+' premios</strong></div><div class="body">';
     h+='<div class="stage" id="stage-'+slot+'" aria-live="polite"><div><div class="lab">'+(R.winners.length?'Premio '+R.winners.length+' de '+total+' para':'Listo para sortear')+'</div><div class="name">'+(last?esc(last):'¿Quién será?')+'</div></div></div>';
     h+='<div class="actions"><button type="button" class="btn primary" data-draw="'+slot+'"'+(left<=0||!pool.length?' disabled':'')+'>'+(left>0?'Sortear premio '+(R.winners.length+1)+' de '+total:'Sorteo completo')+'</button>'+
-       '<button type="button" class="btn ghost" data-drawall="'+slot+'"'+(left<=1||!pool.length?' disabled':'')+'>Sortear los '+Math.max(left,0)+' que faltan</button>'+
+       (left>1&&pool.length>1?'<button type="button" class="btn ghost" data-drawall="'+slot+'">Sortear los '+left+' que faltan</button>':'')+
        '<button type="button" class="btn ghost" data-undo="'+slot+'"'+(R.winners.length?'':' disabled')+'>Deshacer último</button></div>';
     if(left>0&&pool.length<left)h+='<div class="note">Quedan '+pool.length+' personas disponibles para '+left+' premios. Quita a alguien de ausentes si ya llegó.</div>';
     h+='<div><h3 style="font-size:1.2rem;margin-bottom:8px">Ganadores</h3><ol class="winners">';
