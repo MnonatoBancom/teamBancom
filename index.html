@@ -1,0 +1,538 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Premiación DTNEC · Conteo de puntos y sorteo</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@600;700;800&family=Inter:wght@400;500;600;700&display=swap">
+<style>
+:root{
+  color-scheme: light;
+  --bg:#EAF6FC; --surface:#FFFFFF; --surface-2:#FFF8E6; --ink:#14295E; --ink-2:#4A5778;
+  --line:#CFE0EC; --accent:#FFC61A; --accent-ink:#14295E; --grass:#1F8A3B; --danger:#C8231F;
+  --focus:#1E63D6; --header:#14295E; --header-ink:#FFFFFF; --chip:#F1F6FA; --ok-bg:#E3F6E8; --no-bg:#FDE7E6; --warn-bg:#FFF3CC; --warn-ink:#6B4A00;
+  --g1:#1C3F94; --g2:#D42A28; --g3:#1F8A3B; --g4:#F2B705; --g5:#0E73B0;
+  --display:'Baloo 2', 'Trebuchet MS', system-ui, sans-serif;
+  --body:Inter, system-ui, -apple-system, 'Segoe UI', sans-serif;
+  box-sizing:border-box;
+  padding-top:env(safe-area-inset-top,0px);
+  padding-bottom:env(safe-area-inset-bottom,0px);
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    color-scheme: dark;
+    --bg:#0C1A2E; --surface:#13243D; --surface-2:#1A2E4A; --ink:#F1F5FB; --ink-2:#AFBDD1;
+    --line:#2A4062; --chip:#1C3250; --grass:#46C76A; --danger:#FF7B76; --focus:#7FB2FF;
+    --header:#0A1426; --ok-bg:#163A26; --no-bg:#43201F; --warn-bg:#3D3110; --warn-ink:#FFDD7A;
+  }
+}
+:root[data-theme="dark"]{
+  color-scheme: dark;
+  --bg:#0C1A2E; --surface:#13243D; --surface-2:#1A2E4A; --ink:#F1F5FB; --ink-2:#AFBDD1;
+  --line:#2A4062; --chip:#1C3250; --grass:#46C76A; --danger:#FF7B76; --focus:#7FB2FF;
+  --header:#0A1426; --ok-bg:#163A26; --no-bg:#43201F; --warn-bg:#3D3110; --warn-ink:#FFDD7A;
+}
+html{scroll-padding-top:env(safe-area-inset-top,0px)}
+*,*::before,*::after{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--ink);font-family:var(--body);font-size:16px;line-height:1.5}
+h1,h2,h3{font-family:var(--display);line-height:1.1;margin:0}
+button,input,select{font:inherit;color:inherit}
+:focus-visible{outline:3px solid var(--focus);outline-offset:2px;border-radius:8px}
+.wrap{max-width:1240px;margin:0 auto;padding:0 20px}
+
+/* header */
+header.top{background:var(--header);color:var(--header-ink);position:relative;overflow:hidden;padding-bottom:22px}
+.bunting{display:block;width:100%;height:70px}
+.top .wrap{display:flex;flex-wrap:wrap;gap:16px 28px;align-items:flex-end;justify-content:space-between}
+.top h1{font-size:clamp(2rem,4.6vw,3.2rem);font-weight:800}
+.top .sub{display:inline-block;margin-top:6px;background:var(--accent);color:#14295E;font-family:var(--display);font-weight:800;font-size:1.15rem;padding:4px 16px 2px;border-radius:999px}
+.steps{display:flex;gap:8px;flex-wrap:wrap;list-style:none;margin:0;padding:0}
+.steps li{display:flex;align-items:center;gap:10px;padding:8px 16px 8px 8px;border-radius:999px;background:rgba(255,255,255,.1);font-weight:600}
+.steps li .n{width:30px;height:30px;border-radius:50%;display:grid;place-items:center;background:rgba(255,255,255,.18);font-family:var(--display);font-weight:800}
+.steps li[aria-current="step"]{background:#FFFFFF;color:#14295E}
+.steps li[aria-current="step"] .n{background:var(--accent)}
+.steps li.done .n{background:#46C76A;color:#0C1A2E}
+
+main{padding:24px 0 56px}
+.grid{display:flex;flex-wrap:wrap;gap:24px;align-items:flex-start}
+.col-main{flex:999 1 600px;min-width:0;display:flex;flex-direction:column;gap:24px}
+.col-side{flex:1 1 340px;min-width:0;display:flex;flex-direction:column;gap:24px}
+.panel{background:var(--surface);border:1px solid var(--line);border-radius:22px;padding:20px}
+.panel h2{font-size:1.6rem;font-weight:800}
+.muted{color:var(--ink-2)}
+.small{font-size:.875rem}
+
+/* game chips */
+.games{display:flex;gap:8px;flex-wrap:wrap;margin-top:14px}
+.gchip{display:flex;align-items:center;gap:8px;min-height:44px;padding:6px 14px 6px 6px;border-radius:14px;border:2px solid var(--line);background:var(--chip);cursor:pointer;font-weight:600;font-size:.92rem;text-align:left}
+.gchip .lt{width:32px;height:32px;border-radius:10px;display:grid;place-items:center;background:var(--header);color:#FFFFFF;font-family:var(--display);font-weight:800;font-size:1.1rem;flex-shrink:0}
+.gchip[aria-pressed="true"]{border-color:var(--ink);background:var(--surface-2)}
+.gchip .st{width:10px;height:10px;border-radius:50%;background:var(--line);flex-shrink:0}
+.gchip .st.done{background:var(--grass)}
+.gchip .st.warn{background:#E09A00}
+
+/* game card */
+.gamehead{display:flex;flex-wrap:wrap;gap:12px 20px;align-items:center;justify-content:space-between;margin-bottom:14px}
+.gamehead .title{display:flex;gap:14px;align-items:center}
+.biglt{width:58px;height:58px;border-radius:16px;background:var(--accent);color:#14295E;display:grid;place-items:center;font-family:var(--display);font-weight:800;font-size:2rem;flex-shrink:0}
+.gamehead h3{font-size:1.7rem;font-weight:800}
+.meta{display:flex;gap:8px;flex-wrap:wrap;margin-top:4px}
+.tag{display:inline-flex;align-items:center;gap:6px;padding:3px 10px;border-radius:999px;background:var(--chip);font-size:.85rem;font-weight:600}
+.mode{display:flex;flex-direction:column;gap:4px}
+.mode label{font-size:.85rem;font-weight:600;color:var(--ink-2)}
+select,input[type="text"],input[type="number"]{min-height:44px;border:2px solid var(--line);border-radius:12px;background:var(--surface);padding:6px 12px}
+input[type="text"]{width:110px}
+input:disabled,select:disabled{opacity:.6}
+.scroll{overflow-x:auto}
+table{border-collapse:collapse;width:100%}
+.res th{font-size:.8rem;font-weight:700;color:var(--ink-2);text-align:left;padding:8px 10px;border-bottom:2px solid var(--line);white-space:nowrap}
+.res td{padding:10px;border-bottom:1px solid var(--line);vertical-align:middle}
+.res tr:last-child td{border-bottom:0}
+.gpill{display:inline-flex;align-items:center;gap:8px;font-family:var(--display);font-weight:800;font-size:1.05rem;padding:4px 14px 2px;border-radius:999px;color:#FFFFFF;white-space:nowrap}
+.gpill.g4{color:#14295E}
+.verif{display:block;font-size:.8rem;color:var(--ink-2);margin-top:4px;white-space:nowrap}
+.seg{display:inline-flex;border:2px solid var(--line);border-radius:12px;overflow:hidden}
+.seg button{min-height:40px;padding:0 12px;border:0;background:transparent;cursor:pointer;font-weight:600;font-size:.9rem;white-space:nowrap}
+.seg button+button{border-left:2px solid var(--line)}
+.seg button[aria-pressed="true"].ok{background:var(--ok-bg);color:var(--grass)}
+.seg button[aria-pressed="true"].no{background:var(--no-bg);color:var(--danger)}
+.pos{font-family:var(--display);font-weight:800;font-size:1.35rem;white-space:nowrap}
+.pts{font-family:var(--display);font-weight:800;font-size:1.35rem}
+.tb{display:flex;flex-direction:column;gap:2px}
+.tb label{font-size:.75rem;font-weight:700;color:var(--warn-ink)}
+.tb input{border-color:#E09A00}
+.err{color:var(--danger);font-size:.8rem;font-weight:600;display:block;margin-top:2px}
+.note{background:var(--warn-bg);color:var(--warn-ink);border-radius:14px;padding:10px 14px;font-weight:600;font-size:.92rem;margin-top:12px}
+.hint{margin-top:12px;font-size:.88rem;color:var(--ink-2)}
+
+/* scoreboard */
+.board{list-style:none;margin:14px 0 0;padding:0;display:flex;flex-direction:column;gap:8px}
+.board li{display:grid;grid-template-columns:44px minmax(0,1fr) auto;gap:10px;align-items:center;padding:10px 12px;border-radius:16px;background:var(--chip)}
+.board .rk{font-family:var(--display);font-weight:800;font-size:1.6rem;text-align:center}
+.board .out{display:block;font-size:.8rem;color:var(--ink-2);margin-top:2px}
+.board .tot{font-family:var(--display);font-weight:800;font-size:1.8rem;text-align:right;line-height:1}
+.board .tot small{display:block;font-family:var(--body);font-size:.72rem;font-weight:600;color:var(--ink-2)}
+.board li.first{background:var(--surface-2);outline:2px solid var(--accent)}
+.tiebox{margin-top:14px;border:2px dashed #E09A00;border-radius:16px;padding:14px;display:flex;flex-direction:column;gap:10px}
+.tiebox h3{font-size:1.15rem}
+.tierow{display:flex;flex-wrap:wrap;gap:10px;align-items:center}
+.checklist{margin:12px 0 0;padding-left:20px;font-size:.9rem;color:var(--ink-2)}
+.btn{min-height:48px;padding:0 22px;border-radius:14px;border:0;cursor:pointer;font-family:var(--display);font-weight:800;font-size:1.15rem;display:inline-flex;align-items:center;justify-content:center;gap:8px}
+.btn.primary{background:var(--accent);color:#14295E}
+.btn.dark{background:var(--header);color:#FFFFFF;border:2px solid var(--line)}
+.btn.ghost{background:transparent;border:2px solid var(--line);color:var(--ink)}
+.btn.danger{background:transparent;border:2px solid var(--danger);color:var(--danger)}
+.btn:disabled{opacity:.45;cursor:not-allowed}
+.btn.block{width:100%;margin-top:14px}
+.matrix th,.matrix td{padding:8px;text-align:center;border-bottom:1px solid var(--line);font-size:.92rem;white-space:nowrap}
+.matrix th:first-child,.matrix td:first-child{text-align:left}
+.matrix tfoot td,.matrix td.sum{font-weight:800}
+details.cfg summary{cursor:pointer;font-weight:700;min-height:44px;display:flex;align-items:center}
+.ptsgrid{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:8px;margin-top:8px}
+.ptsgrid label{display:flex;flex-direction:column;font-size:.8rem;font-weight:600;color:var(--ink-2);gap:4px}
+.ptsgrid input{width:100%}
+
+/* raffle */
+.podium{display:flex;flex-wrap:wrap;gap:24px}
+.prize{flex:1 1 440px;min-width:0;background:var(--surface);border:1px solid var(--line);border-radius:24px;overflow:hidden;display:flex;flex-direction:column}
+.prize .band{padding:16px 20px;display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap;color:#FFFFFF}
+.prize .band h2{font-size:1.9rem;font-weight:800}
+.prize .band.g4{color:#14295E}
+.prize .body{padding:18px 20px 22px;display:flex;flex-direction:column;gap:16px}
+.stage{border-radius:18px;background:var(--surface-2);min-height:108px;display:grid;place-items:center;text-align:center;padding:14px}
+.stage .lab{font-size:.85rem;font-weight:600;color:var(--ink-2)}
+.stage .name{font-family:var(--display);font-weight:800;font-size:clamp(1.6rem,3.4vw,2.3rem);line-height:1.1}
+.stage.spin .name{color:var(--ink-2)}
+.members{display:flex;flex-wrap:wrap;gap:8px}
+.mchip{min-height:40px;padding:4px 14px;border-radius:999px;border:2px solid var(--line);background:var(--chip);cursor:pointer;font-weight:600;font-size:.9rem}
+.mchip[aria-pressed="true"]{text-decoration:line-through;opacity:.55}
+.mchip.win{background:var(--accent);color:#14295E;border-color:var(--accent);cursor:default}
+.winners{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:8px}
+.winners li{display:flex;gap:12px;align-items:center;padding:10px 14px;border-radius:14px;background:var(--chip);font-weight:600}
+.winners li .n{width:34px;height:34px;border-radius:10px;display:grid;place-items:center;background:var(--accent);color:#14295E;font-family:var(--display);font-weight:800;flex-shrink:0}
+.winners li.empty{color:var(--ink-2);font-weight:500}
+.winners li.empty .n{background:var(--line);color:var(--ink-2)}
+.actions{display:flex;flex-wrap:wrap;gap:10px}
+.rest{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:14px;margin-top:14px}
+.rest .card{border-radius:18px;background:var(--chip);padding:14px 16px}
+.rest .card strong{font-family:var(--display);font-size:1.2rem}
+.toast{position:fixed;left:50%;bottom:calc(24px + env(safe-area-inset-bottom,0px));transform:translateX(-50%);background:var(--header);color:#FFFFFF;padding:12px 20px;border-radius:14px;font-weight:600;z-index:20;max-width:90vw}
+.modal{position:fixed;inset:0;background:rgba(10,20,38,.55);display:flex;align-items:center;justify-content:center;padding:20px;z-index:30}
+.modal[hidden]{display:none}
+.modal .box{background:var(--surface);color:var(--ink);border-radius:22px;max-width:480px;width:100%;padding:22px;display:flex;flex-direction:column;gap:14px;box-shadow:0 20px 50px rgba(0,0,0,.35)}
+.modal h2{font-size:1.6rem}
+.modal ol{margin:0;padding-left:22px}
+.modal .actions{justify-content:flex-end}
+.sr{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}
+@media (prefers-reduced-motion: reduce){*{transition:none!important;animation:none!important}}
+</style>
+</head>
+<body>
+<header class="top">
+  <svg class="bunting" viewBox="0 0 1200 70" preserveAspectRatio="none" aria-hidden="true" id="bunting"></svg>
+  <div class="wrap">
+    <div>
+      <h1>Premiación de juegos</h1>
+      <span class="sub">DTNEC • Parrilla, juegos y más</span>
+    </div>
+    <ol class="steps" id="steps">
+      <li id="st1"><span class="n">1</span>Conteo de puntos</li>
+      <li id="st2"><span class="n">2</span>Sorteo de premios</li>
+    </ol>
+  </div>
+</header>
+
+<main class="wrap">
+  <section id="view1" class="grid" aria-labelledby="t1">
+    <div class="col-main">
+      <div class="panel">
+        <h2 id="t1">Resultados por juego</h2>
+        <p class="muted small" style="margin:4px 0 0">Elige un juego y marca si cada grupo cumplió. El tiempo es opcional: si lo anotas, ordena a los grupos que cumplieron y gana el menor tiempo.</p>
+        <div class="games" id="gameChips" role="group" aria-label="Juegos"></div>
+      </div>
+      <div class="panel" id="gamePanel"></div>
+      <div class="panel">
+        <h2>Puntos por juego</h2>
+        <div class="scroll" style="margin-top:12px"><table class="matrix" id="matrix"></table></div>
+      </div>
+    </div>
+    <aside class="col-side">
+      <div class="panel">
+        <h2>Tabla de posiciones</h2>
+        <ol class="board" id="board"></ol>
+        <div id="ties"></div>
+        <ul class="checklist" id="pending"></ul>
+        <button class="btn primary block" id="confirmBtn" type="button">Confirmar ganadores</button>
+        <p class="hint" id="confirmedNote" hidden>Conteo confirmado. Para cambiar resultados, reabre el conteo desde el paso 2.</p>
+      </div>
+      <div class="panel">
+        <details class="cfg">
+          <summary>Puntos por puesto en cada juego</summary>
+          <p class="muted small" style="margin:4px 0 0">Un grupo que no cumple el juego recibe 0 puntos.</p>
+          <div class="ptsgrid" id="ptsgrid"></div>
+          <button class="btn danger block" id="resetAll" type="button">Borrar todos los datos</button>
+        </details>
+      </div>
+    </aside>
+  </section>
+
+  <section id="view2" hidden aria-labelledby="t2">
+    <div class="panel" style="margin-bottom:24px;display:flex;flex-wrap:wrap;gap:14px;justify-content:space-between;align-items:center">
+      <div>
+        <h2 id="t2">Sorteo de premios</h2>
+        <p class="muted small" style="margin:4px 0 0">Toca un nombre para marcarlo como ausente y dejarlo fuera del sorteo. Cada persona puede ganar un solo premio.</p>
+      </div>
+      <div class="actions">
+        <button class="btn ghost" id="copyBtn" type="button">Copiar resultados</button>
+        <button class="btn danger" id="reopenBtn" type="button">Reabrir conteo</button>
+      </div>
+    </div>
+    <div class="podium" id="podium"></div>
+    <div class="panel" style="margin-top:24px">
+      <h2>Castigos</h2>
+      <div class="rest" id="rest"></div>
+    </div>
+  </section>
+</main>
+<div class="toast" id="toast" role="status" aria-live="polite" hidden></div>
+<div class="modal" id="modal" hidden><div class="box" role="dialog" aria-modal="true" aria-labelledby="mTitle"><h2 id="mTitle"></h2><div id="mBody"></div><div class="actions"><button type="button" class="btn ghost" id="mCancel">Cancelar</button><button type="button" class="btn primary" id="mOk"></button></div></div></div>
+
+<script>
+(function(){
+const GROUPS=[
+ {id:'g1',name:'Grupo 1',verifier:'Carlos Mayorga Hilario',members:['Paola Flores Ugarte','Gini Ramos','Franz Acuña','Jose Rojas','Elgar Puma','Rodrigo Perez Osorio','Istvan Elias','Ricardo Vega Q.','Katherine Cuzcano Mendoza']},
+ {id:'g2',name:'Grupo 2',verifier:'Mafer Llacsahuanga Medina',members:['Fatima Maizel','Cintya Saldaña','Marcial Silva','Daniel Saavedra Quispe','Richard Solis Leon','Aldo Martin Lezama Benavides','Jhonny Unocc','Alonso Silva Vidal','Gustavo Santos']},
+ {id:'g3',name:'Grupo 3',verifier:'Monica Toribio',members:['Yazmin Saravia','Angela Salvador Yzaguirre','Percy Camacuari','Gianfranco Barruetto Ruiz','Luis Chavaria','Julio Cesar Huacho Castro','Jorge Menendez Fernandez','Adriano Altuna','Gonzalo Cáceres Murga','Marcia Casas']},
+ {id:'g4',name:'Grupo 4',verifier:'Estefany Montellanos',members:['Miwa Sanchez','Fabiola Matencio Cruces','Nestor Torres','Ricardo De La Cruz','Paul Manco Medina','Gonzalo León Málaga','Carlos Antonio Cruzado Padilla','Jose Huaman Villanueva','Jesus Perales de la Cruz']},
+ {id:'g5',name:'Grupo 5',verifier:'Edmundo Acosta',members:['Ynes Guevovich Jaime','Denis del Mar','Eduardo Acosta','Rolando Julca','Marcos Arce Chavez','Ricardo Espinoza Sarmiento','Paul Iparraguirre','Carlos Del Rosario','Mavi Nonato Inga','Graciano Medina Tasayco']}
+];
+const GAMES=[
+ {id:'M',name:'Carrera de shots',min:10,resp:'Mafer'},
+ {id:'O',name:'Torre de vasitos',min:10,resp:'Mafer'},
+ {id:'A',name:'Canta y gana',min:15,resp:'Estefany'},
+ {id:'N',name:'Tutifruti por relevos',min:15,resp:'Edmundo'},
+ {id:'F',name:'Carrera de cadenas',min:10,resp:'Katherine'},
+ {id:'H',name:'Recuento de pelotas',min:10,resp:'Katherine'},
+ {id:'L',name:'Jalar la soga',min:20,resp:'Gustavo'},
+ {id:'D',name:'Mega circuito de relevos',min:30,resp:'Gonzalo'},
+ {id:'B',name:'Quemados con globos de agua',min:25,resp:'Jesus'}
+];
+const PRIZES={first:5,second:2};
+const OUT={1:'5 premios sorpresa por sorteo',2:'2 premios sorpresa por sorteo',3:'Bebida misteriosa',4:'Bebida misteriosa + ejercicio físico',5:'Bebida misteriosa + ejercicio físico'};
+const KEY='dtnec-premiacion-v1';
+const G=id=>GROUPS.find(g=>g.id===id);
+const $=id=>document.getElementById(id);
+const esc=s=>String(s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+
+function fresh(){
+  const games={};GAMES.forEach(g=>games[g.id]={mode:'time',res:{}});
+  return {games,points:[5,4,3,2,1],overallTb:{},sel:'M',confirmed:false,final:null,raffle:{first:{absent:[],winners:[]},second:{absent:[],winners:[]}}};
+}
+let S=fresh();
+try{const raw=localStorage.getItem(KEY);if(raw){const p=JSON.parse(raw);if(p&&p.games){S=Object.assign(fresh(),p);}}}catch(e){}
+function save(){try{localStorage.setItem(KEY,JSON.stringify(S));}catch(e){}}
+
+/* bunting */
+(function(){
+  const c=['#E8312F','#FFC61A','#2BA84A','#1E63D6','#FF7A1A','#E8459A','#FFFFFF'];
+  const y=x=>8+30*(1-Math.pow((x-600)/600,2));
+  let pts=[];for(let x=0;x<=1200;x+=40)pts.push(x+','+y(x).toFixed(1));
+  let h='<polyline points="'+pts.join(' ')+'" fill="none" stroke="rgba(255,255,255,.55)" stroke-width="2"/>';
+  const n=24;for(let i=0;i<n;i++){const x=25+i*(1150/(n-1)),a=x-20,b=x+20;h+='<path d="M'+a+' '+y(a)+' L'+b+' '+y(b)+' L'+x+' '+(y(x)+34)+' Z" fill="'+c[i%c.length]+'"/>';}
+  $('bunting').innerHTML=h;
+})();
+
+/* parsing */
+function parseVal(s,mode){
+  if(s==null)return null;s=String(s).trim().replace(',','.');if(s==='')return null;
+  if(mode==='place'){return /^[1-5]$/.test(s)?+s:NaN;}
+  let m;
+  if(/^\d+(\.\d+)?$/.test(s))return +s;
+  if((m=s.match(/^(\d+):([0-5]?\d(?:\.\d+)?)$/)))return (+m[1])*60+(+m[2]);
+  return NaN;
+}
+function fmt(sec){if(sec==null||isNaN(sec))return '';const m=Math.floor(sec/60),s=sec-m*60;const ss=(Math.round(s*10)/10);return m+':'+(ss<10?'0':'')+ss;}
+const ord=n=>n+'°';
+
+/* scoring */
+function gameResult(gid){
+  const st=S.games[gid],mode=st.mode,out={rows:{},pending:[],unresolved:false,complete:true};
+  const valid=[],noTime=[];
+  GROUPS.forEach(g=>{
+    const e=st.res[g.id]||{};const r={status:e.s||null,val:parseVal(e.v,mode),tb:parseVal(e.tb,'time'),pos:null,pts:0,tie:false,bad:false};
+    if(r.status==='ok'){
+      if(r.val==null){noTime.push(g.id);r.noTime=true;}
+      else if(isNaN(r.val)){r.bad=true;out.pending.push(g.id);}
+      else valid.push(g.id);
+    } else if(!r.status) out.pending.push(g.id);
+    out.rows[g.id]=r;
+  });
+  const key=id=>{const r=out.rows[id];return [r.val,(r.tb==null||isNaN(r.tb))?Infinity:r.tb];};
+  valid.sort((a,b)=>{const A=key(a),B=key(b);return A[0]-B[0]||A[1]-B[1];});
+  valid.forEach((id,i)=>{
+    const r=out.rows[id];
+    // tie in main value with anyone?
+    r.tie=valid.some(o=>o!==id&&out.rows[o].val===r.val);
+    if(i>0){const p=valid[i-1],P=out.rows[p];const A=key(id),B=key(p);
+      const tbOk=A[1]!==Infinity&&B[1]!==Infinity&&A[1]!==B[1];if(A[0]===B[0]&&!tbOk){r.pos=P.pos;out.unresolved=true;}else r.pos=i+1;}
+    else r.pos=1;
+  });
+  // mark unresolved also for first of pair
+  noTime.forEach(id=>{out.rows[id].pos=valid.length+1;});
+  const placed=valid.concat(noTime);
+  placed.forEach(id=>{const r=out.rows[id];r.shared=placed.some(o=>o!==id&&out.rows[o].pos===r.pos);r.pts=S.points[r.pos-1]||0;});
+  if(out.pending.length)out.complete=false;
+  return out;
+}
+function standings(){
+  const res={};GAMES.forEach(g=>res[g.id]=gameResult(g.id));
+  const tot={};GROUPS.forEach(g=>{tot[g.id]=GAMES.reduce((a,gm)=>a+(res[gm.id].rows[g.id].pts||0),0);});
+  const ids=GROUPS.map(g=>g.id).sort((a,b)=>tot[b]-tot[a]);
+  // tie sets
+  const sets=[];let i=0;
+  while(i<ids.length){let j=i;while(j+1<ids.length&&tot[ids[j+1]]===tot[ids[i]])j++;sets.push(ids.slice(i,j+1));i=j+1;}
+  const order=[],pos={},ties=[];let p=1;
+  sets.forEach(set=>{
+    if(set.length===1){pos[set[0]]=p;order.push(set[0]);p++;return;}
+    const k=set.slice().sort().join('-');const tb=S.overallTb[k]||{};const times={};
+    set.forEach(id=>times[id]=parseVal((tb.times||{})[id],'time'));
+    const allOk=set.every(id=>times[id]!=null&&!isNaN(times[id]));
+    const distinct=allOk&&new Set(set.map(id=>times[id])).size===set.length;
+    const start=p,end=p+set.length-1;
+    const cls=x=>x<=3?x:4;
+    const relevant=cls(start)!==cls(end);
+    if(distinct){set.slice().sort((a,b)=>times[a]-times[b]).forEach(id=>{pos[id]=p;order.push(id);p++;});}
+    else{set.forEach(id=>{pos[id]=start;order.push(id);});p+=set.length;}
+    ties.push({key:k,set,start,end,relevant,resolved:distinct,tb});
+  });
+  return {res,tot,order,pos,ties};
+}
+
+/* view 1 render */
+function pill(id){const g=G(id);return '<span class="gpill '+id+'" style="background:var(--'+id+')">'+esc(g.name)+'</span>';}
+function renderChips(sd){
+  $('gameChips').innerHTML=GAMES.map(g=>{const r=sd.res[g.id];const started=Object.keys(S.games[g.id].res).length>0;
+    const st=r.complete?'done':(started?'warn':'');
+    const lab=r.complete?'completo':(started?'en curso':'sin datos');
+    return '<button type="button" class="gchip" aria-pressed="'+(S.sel===g.id)+'" data-g="'+g.id+'"><span class="lt">'+g.id+'</span>'+esc(g.name)+'<span class="st '+st+'" title="'+lab+'"></span><span class="sr">('+lab+')</span></button>';}).join('');
+}
+function renderGame(){
+  const gm=GAMES.find(g=>g.id===S.sel),st=S.games[gm.id],dis=S.confirmed?' disabled':'';
+  const timeMode=st.mode==='time';
+  let h='<div class="gamehead"><div class="title"><span class="biglt" aria-hidden="true">'+gm.id+'</span><div><h3>'+esc(gm.name)+'</h3><div class="meta"><span class="tag">'+gm.min+' minutos</span><span class="tag">Responsable: '+esc(gm.resp)+'</span></div></div></div>'+
+  '<div class="mode"><label for="modeSel">Cómo se define el puesto</label><select id="modeSel"'+dis+'><option value="time"'+(timeMode?' selected':'')+'>Por tiempo (gana el menor)</option><option value="place"'+(!timeMode?' selected':'')+'>Puesto anotado a mano (1 a 5)</option></select></div></div>';
+  h+='<div class="scroll"><table class="res"><thead><tr><th scope="col">Grupo</th><th scope="col">¿Cumplió?</th><th scope="col">'+(timeMode?'Tiempo (min:seg)':'Puesto')+'</th><th scope="col">Puesto</th><th scope="col">Puntos</th></tr></thead><tbody>';
+  GROUPS.forEach(g=>{const e=st.res[g.id]||{};
+    h+='<tr data-row="'+g.id+'"><td>'+pill(g.id)+'<span class="verif">Verifica: '+esc(g.verifier)+'</span></td>'+
+    '<td><div class="seg" role="group" aria-label="¿'+esc(g.name)+' cumplió?"><button type="button" class="ok" data-s="ok" aria-pressed="'+(e.s==='ok')+'"'+dis+'>Cumplió</button><button type="button" class="no" data-s="no" aria-pressed="'+(e.s==='no')+'"'+dis+'>No cumplió</button></div></td>'+
+    '<td><label class="sr" for="v-'+g.id+'">'+(timeMode?'Tiempo':'Puesto')+' de '+esc(g.name)+'</label><input type="text" inputmode="decimal" id="v-'+g.id+'" data-f="v" value="'+esc(e.v||'')+'" placeholder="'+(timeMode?'4:35':'1')+'"'+((e.s!=='ok'||S.confirmed)?' disabled':'')+'><span class="err" data-err></span>'+
+    '<div class="tb" data-tbwrap hidden style="margin-top:8px"><label for="tb-'+g.id+'">Tiempo de desempate</label><input type="text" inputmode="decimal" id="tb-'+g.id+'" data-f="tb" value="'+esc(e.tb||'')+'" placeholder="0:45"'+dis+'></div></td>'+
+    '<td class="pos" data-pos></td><td class="pts" data-pts></td></tr>';
+  });
+  h+='</tbody></table></div><div id="gameNote"></div>';
+  h+='<p class="hint">'+(timeMode?'El tiempo es opcional. Escríbelo como 4:35 (4 minutos 35 segundos) o solo en segundos, por ejemplo 275. Los grupos que cumplieron sin tiempo anotado comparten el puesto siguiente a los que sí tienen tiempo.':'Usa este modo en juegos sin cronómetro, como jalar la soga: anota el puesto final de cada grupo.')+'</p>';
+  $('gamePanel').innerHTML=h;
+}
+function updateGame(sd){
+  const r=sd.res[S.sel],timeMode=S.games[S.sel].mode==='time';
+  GROUPS.forEach(g=>{const row=document.querySelector('[data-row="'+g.id+'"]');if(!row)return;const x=r.rows[g.id];
+    row.querySelector('[data-pos]').textContent=x.status==='no'?'—':(x.pos?ord(x.pos)+(x.noTime?' (sin tiempo)':(x.shared?' (empate)':'')):'');
+    row.querySelector('[data-pts]').textContent=x.status==='no'?'0':(x.pos?x.pts:'');
+    row.querySelector('[data-err]').textContent=x.bad?(timeMode?'Usa el formato 4:35':'Escribe un número del 1 al 5'):'';
+    row.querySelector('[data-tbwrap]').hidden=!(x.status==='ok'&&x.tie);
+  });
+  const n=$('gameNote');
+  n.innerHTML=r.unresolved?'<div class="note">Hay grupos con el mismo tiempo y por ahora comparten puesto y puntos. Si hacen un desempate, anota su tiempo y el menor gana el puesto; si no, puedes continuar así.</div>':'';
+}
+function renderBoard(sd){
+  $('board').innerHTML=sd.order.map(id=>{const p=sd.pos[id];const tied=sd.order.filter(o=>sd.pos[o]===p).length>1;
+    return '<li class="'+(p===1&&!tied?'first':'')+'"><span class="rk">'+ord(p)+'</span><span>'+pill(id)+'<span class="out">'+(tied?'Empate por resolver':esc(OUT[p]))+'</span></span><span class="tot">'+sd.tot[id]+'<small>puntos</small></span></li>';}).join('');
+  const dis=S.confirmed?' disabled':'';
+  $('ties').innerHTML=sd.ties.filter(t=>t.relevant).map(t=>{
+    const tb=t.tb||{};
+    const opts=GAMES.map(g=>'<option value="'+g.id+'"'+(tb.game===g.id?' selected':'')+'>'+g.id+' · '+esc(g.name)+'</option>').join('');
+    return '<div class="tiebox" data-tie="'+t.key+'"><h3>Empate en el '+ord(t.start)+' puesto</h3><p class="small muted" style="margin:0">'+t.set.map(id=>esc(G(id).name)).join(' y ')+' tienen los mismos puntos. Elige el juego que van a repetir y anota su tiempo; el menor tiempo gana.</p>'+
+    '<div class="mode"><label for="tbg-'+t.key+'">Juego de desempate</label><select id="tbg-'+t.key+'" data-tbg'+dis+'><option value="">Elegir juego</option>'+opts+'</select></div>'+
+    '<div class="tierow">'+t.set.map(id=>'<div class="mode"><label for="tbt-'+t.key+'-'+id+'">'+esc(G(id).name)+'</label><input type="text" inputmode="decimal" id="tbt-'+t.key+'-'+id+'" data-tbt="'+id+'" value="'+esc((tb.times||{})[id]||'')+'" placeholder="1:20"'+dis+'></div>').join('')+'</div>'+
+    (t.resolved?'<p class="small" style="margin:0;color:var(--grass);font-weight:700">Desempate resuelto</p>':'')+'</div>';
+  }).join('');
+}
+function blockers(sd){
+  const b=[];
+  GAMES.forEach(g=>{const r=sd.res[g.id];
+    if(r.pending.length)b.push(g.id+' · '+g.name+': falta registrar '+r.pending.map(id=>G(id).name).join(', '));
+  });
+  sd.ties.filter(t=>t.relevant&&!t.resolved).forEach(t=>b.push('Empate en el '+ord(t.start)+' puesto de la tabla general'));
+  return b;
+}
+function renderSide(sd){
+  renderBoard(sd);
+  const b=blockers(sd);
+  $('pending').innerHTML=S.confirmed?'':b.slice(0,8).map(x=>'<li>'+esc(x)+'</li>').join('')+(b.length>8?'<li>y '+(b.length-8)+' pendientes más</li>':'');
+  $('confirmBtn').disabled=S.confirmed||b.length>0;
+  $('confirmBtn').hidden=S.confirmed;
+  $('confirmedNote').hidden=!S.confirmed;
+}
+function renderMatrix(sd){
+  let h='<thead><tr><th scope="col">Grupo</th>'+GAMES.map(g=>'<th scope="col" title="'+esc(g.name)+'">'+g.id+'</th>').join('')+'<th scope="col">Total</th></tr></thead><tbody>';
+  GROUPS.forEach(g=>{h+='<tr><td>'+pill(g.id)+'</td>'+GAMES.map(gm=>{const x=sd.res[gm.id].rows[g.id];return '<td>'+(x.status==='no'?'0':(x.pos?x.pts:'·'))+'</td>';}).join('')+'<td class="sum">'+sd.tot[g.id]+'</td></tr>';});
+  $('matrix').innerHTML=h+'</tbody>';
+}
+function renderPts(){
+  $('ptsgrid').innerHTML=S.points.map((p,i)=>'<label>'+ord(i+1)+' puesto<input type="number" min="0" step="1" data-pi="'+i+'" value="'+p+'"'+(S.confirmed?' disabled':'')+'></label>').join('');
+}
+function refresh(full){
+  const sd=standings();
+  if(full){renderGame();renderPts();}
+  renderChips(sd);updateGame(sd);renderSide(sd);renderMatrix(sd);
+  return sd;
+}
+
+/* events view 1 */
+$('gameChips').addEventListener('click',e=>{const b=e.target.closest('[data-g]');if(!b)return;S.sel=b.dataset.g;save();refresh(true);});
+$('gamePanel').addEventListener('click',e=>{
+  const b=e.target.closest('[data-s]');if(!b||S.confirmed)return;
+  const gid=b.closest('[data-row]').dataset.row;const res=S.games[S.sel].res;const e0=res[gid]||{};
+  e0.s=(e0.s===b.dataset.s)?undefined:b.dataset.s;if(!e0.s)delete e0.s;res[gid]=e0;save();
+  const row=b.closest('[data-row]');row.querySelectorAll('[data-s]').forEach(x=>x.setAttribute('aria-pressed',String(x.dataset.s===e0.s)));
+  const inp=row.querySelector('[data-f="v"]');inp.disabled=e0.s!=='ok';if(e0.s==='ok')inp.focus();
+  refresh(false);
+});
+$('gamePanel').addEventListener('input',e=>{
+  const f=e.target.dataset.f;if(!f)return;const gid=e.target.closest('[data-row]').dataset.row;
+  const res=S.games[S.sel].res;res[gid]=res[gid]||{};res[gid][f]=e.target.value;save();refresh(false);
+});
+$('gamePanel').addEventListener('change',e=>{
+  if(e.target.id==='modeSel'){S.games[S.sel].mode=e.target.value;Object.values(S.games[S.sel].res).forEach(r=>{delete r.v;delete r.tb;});save();refresh(true);return;}
+});
+$('ties').addEventListener('change',e=>{const box=e.target.closest('[data-tie]');if(!box)return;const k=box.dataset.tie;S.overallTb[k]=S.overallTb[k]||{times:{}};
+  if(e.target.matches('[data-tbg]')){S.overallTb[k].game=e.target.value;save();}});
+$('ties').addEventListener('input',e=>{const box=e.target.closest('[data-tie]');if(!box||!e.target.dataset.tbt)return;const k=box.dataset.tie;S.overallTb[k]=S.overallTb[k]||{times:{}};S.overallTb[k].times=S.overallTb[k].times||{};S.overallTb[k].times[e.target.dataset.tbt]=e.target.value;save();
+  const sd=standings();renderBoard(sd);/* keep focus: re-find */const el=document.getElementById(e.target.id);if(el){el.focus();const v=el.value;el.setSelectionRange(v.length,v.length);}renderChips(sd);const b=blockers(sd);$('pending').innerHTML=b.slice(0,8).map(x=>'<li>'+esc(x)+'</li>').join('');$('confirmBtn').disabled=b.length>0;});
+$('ptsgrid').addEventListener('input',e=>{const i=e.target.dataset.pi;if(i==null)return;const v=parseInt(e.target.value,10);S.points[+i]=isNaN(v)?0:Math.max(0,v);save();refresh(false);});
+let mResolve=null,mPrev=null;
+function ask(title,body,ok){return new Promise(res=>{mPrev=document.activeElement;$('mTitle').textContent=title;$('mBody').innerHTML=body;$('mOk').textContent=ok;$('modal').hidden=false;mResolve=res;$('mOk').focus();});}
+function closeModal(v){$('modal').hidden=true;if(mResolve){mResolve(v);mResolve=null;}if(mPrev&&mPrev.focus)mPrev.focus();}
+$('mOk').addEventListener('click',()=>closeModal(true));
+$('mCancel').addEventListener('click',()=>closeModal(false));
+$('modal').addEventListener('click',e=>{if(e.target.id==='modal')closeModal(false);});
+$('modal').addEventListener('keydown',e=>{if(e.key==='Escape')closeModal(false);});
+$('resetAll').addEventListener('click',async()=>{if(await ask('Borrar todos los datos','<p style="margin:0">Se borrarán todos los resultados, desempates y sorteos.</p>','Borrar todo')){S=fresh();save();go(1);refresh(true);toast('Datos borrados');}});
+$('confirmBtn').addEventListener('click',async()=>{
+  const sd=standings();if(blockers(sd).length)return;
+  const lines='<ol>'+sd.order.map(id=>'<li>'+esc(G(id).name)+': '+sd.tot[id]+' puntos</li>').join('')+'</ol><p class="muted small" style="margin:10px 0 0">Después de confirmar, el conteo queda bloqueado y se habilita el sorteo.</p>';
+  if(!(await ask('Confirmar ganadores',lines,'Confirmar y pasar al sorteo')))return;
+  S.confirmed=true;S.final={order:sd.order.slice(),pos:Object.assign({},sd.pos),tot:Object.assign({},sd.tot)};
+  S.raffle={first:{absent:[],winners:[]},second:{absent:[],winners:[]}};save();refresh(true);go(2);toast('Ganadores confirmados');
+});
+
+/* view 2 */
+function slotGroup(slot){const want=slot==='first'?1:2;return S.final.order.find(id=>S.final.pos[id]===want);}
+function renderRaffle(){
+  if(!S.final)return;
+  $('podium').innerHTML=['first','second'].map(slot=>{
+    const gid=slotGroup(slot),g=G(gid),R=S.raffle[slot],total=PRIZES[slot],left=total-R.winners.length;
+    const pool=g.members.filter(m=>!R.absent.includes(m)&&!R.winners.includes(m));
+    const last=R.winners[R.winners.length-1];
+    let h='<article class="prize"><div class="band '+gid+'" style="background:var(--'+gid+')"><div><h2>'+(slot==='first'?'1° lugar':'2° lugar')+' · '+esc(g.name)+'</h2><span>'+S.final.tot[gid]+' puntos · '+g.members.length+' integrantes</span></div><strong style="font-family:var(--display);font-size:1.3rem">'+total+' premios</strong></div><div class="body">';
+    h+='<div class="stage" id="stage-'+slot+'" aria-live="polite"><div><div class="lab">'+(R.winners.length?'Premio '+R.winners.length+' de '+total+' para':'Listo para sortear')+'</div><div class="name">'+(last?esc(last):'¿Quién será?')+'</div></div></div>';
+    h+='<div class="actions"><button type="button" class="btn primary" data-draw="'+slot+'"'+(left<=0||!pool.length?' disabled':'')+'>'+(left>0?'Sortear premio '+(R.winners.length+1)+' de '+total:'Sorteo completo')+'</button>'+
+       '<button type="button" class="btn ghost" data-drawall="'+slot+'"'+(left<=1||!pool.length?' disabled':'')+'>Sortear los '+Math.max(left,0)+' que faltan</button>'+
+       '<button type="button" class="btn ghost" data-undo="'+slot+'"'+(R.winners.length?'':' disabled')+'>Deshacer último</button></div>';
+    if(left>0&&pool.length<left)h+='<div class="note">Quedan '+pool.length+' personas disponibles para '+left+' premios. Quita a alguien de ausentes si ya llegó.</div>';
+    h+='<div><h3 style="font-size:1.2rem;margin-bottom:8px">Ganadores</h3><ol class="winners">';
+    for(let i=0;i<total;i++){const w=R.winners[i];h+='<li class="'+(w?'':'empty')+'"><span class="n">'+(i+1)+'</span>'+(w?esc(w):'Por sortear')+'</li>';}
+    h+='</ol></div><div><h3 style="font-size:1.2rem;margin-bottom:8px">Participan</h3><div class="members">';
+    g.members.forEach(m=>{const win=R.winners.includes(m);h+=win?'<span class="mchip win">'+esc(m)+'</span>':'<button type="button" class="mchip" data-absent="'+slot+'" data-m="'+esc(m)+'" aria-pressed="'+R.absent.includes(m)+'" title="Marcar como ausente">'+esc(m)+'</button>';});
+    h+='</div><p class="hint" style="margin-top:8px">'+esc(g.verifier)+' verifica el grupo y no participa del sorteo.</p></div></div></article>';
+    return h;
+  }).join('');
+  $('rest').innerHTML=S.final.order.filter(id=>S.final.pos[id]>=3).map(id=>'<div class="card"><div>'+ord(S.final.pos[id])+' lugar · '+S.final.tot[id]+' pts</div><strong>'+esc(G(id).name)+'</strong><div class="muted small">'+esc(OUT[S.final.pos[id]])+'</div></div>').join('');
+}
+function rand(n){const a=new Uint32Array(1);crypto.getRandomValues(a);return a[0]%n;}
+let busy=false;
+const reduce=window.matchMedia&&matchMedia('(prefers-reduced-motion: reduce)').matches;
+function drawOne(slot,cb){
+  const g=G(slotGroup(slot)),R=S.raffle[slot];
+  const pool=g.members.filter(m=>!R.absent.includes(m)&&!R.winners.includes(m));
+  if(!pool.length||R.winners.length>=PRIZES[slot]){cb&&cb();return;}
+  const win=pool[rand(pool.length)];
+  const finish=()=>{R.winners.push(win);save();renderRaffle();cb&&cb();};
+  if(reduce){finish();return;}
+  busy=true;const st=$('stage-'+slot);st.classList.add('spin');const nm=st.querySelector('.name');st.querySelector('.lab').textContent='Sorteando premio '+(R.winners.length+1)+'…';
+  let t=0,delay=50;
+  (function tick(){nm.textContent=pool[rand(pool.length)];t+=delay;delay=Math.min(delay*1.12,260);if(t<1800)setTimeout(tick,delay);else{busy=false;finish();}})();
+}
+$('podium').addEventListener('click',e=>{
+  if(busy)return;const t=e.target.closest('button');if(!t)return;
+  if(t.dataset.draw){drawOne(t.dataset.draw);}
+  else if(t.dataset.drawall){const slot=t.dataset.drawall;const step=()=>{const R=S.raffle[slot];if(R.winners.length<PRIZES[slot])drawOne(slot,()=>setTimeout(()=>{const g=G(slotGroup(slot));const pool=g.members.filter(m=>!R.absent.includes(m)&&!R.winners.includes(m));if(pool.length&&R.winners.length<PRIZES[slot])step();},500));};step();}
+  else if(t.dataset.undo){S.raffle[t.dataset.undo].winners.pop();save();renderRaffle();}
+  else if(t.dataset.absent){const R=S.raffle[t.dataset.absent],m=t.dataset.m;const i=R.absent.indexOf(m);if(i>=0)R.absent.splice(i,1);else R.absent.push(m);save();renderRaffle();}
+});
+$('reopenBtn').addEventListener('click',async()=>{if(!(await ask('Reabrir conteo','<p style="margin:0">Se reabrirá el conteo de puntos y se borrarán los resultados del sorteo.</p>','Reabrir conteo')))return;S.confirmed=false;S.final=null;S.raffle={first:{absent:[],winners:[]},second:{absent:[],winners:[]}};save();go(1);refresh(true);toast('Conteo reabierto');});
+$('copyBtn').addEventListener('click',()=>{
+  const f=S.final;let t='Premiación DTNEC · Parrilla, juegos y más\n\nTabla final\n';
+  f.order.forEach(id=>t+=ord(f.pos[id])+' '+G(id).name+': '+f.tot[id]+' pts · '+OUT[f.pos[id]]+'\n');
+  ['first','second'].forEach(slot=>{const g=G(slotGroup(slot));t+='\nGanadores del sorteo, '+g.name+'\n';S.raffle[slot].winners.forEach((w,i)=>t+='Premio '+(i+1)+': '+w+'\n');if(!S.raffle[slot].winners.length)t+='Sorteo pendiente\n';});
+  const done=()=>toast('Resultados copiados');
+  if(navigator.clipboard&&navigator.clipboard.writeText)navigator.clipboard.writeText(t).then(done,()=>fallback(t));else fallback(t);
+  function fallback(x){const ta=document.createElement('textarea');ta.value=x;document.body.appendChild(ta);ta.select();try{document.execCommand('copy');done();}catch(err){}ta.remove();}
+});
+
+/* nav + toast */
+function go(n){
+  const ok=n===2&&S.confirmed;$('view1').hidden=ok;$('view2').hidden=!ok;
+  $('st1').setAttribute('aria-current',ok?'false':'step');$('st2').setAttribute('aria-current',ok?'step':'false');
+  $('st1').classList.toggle('done',S.confirmed);
+  if(ok)renderRaffle();window.scrollTo(0,0);
+}
+let tt;function toast(m){const el=$('toast');el.textContent=m;el.hidden=false;clearTimeout(tt);tt=setTimeout(()=>el.hidden=true,2400);}
+
+refresh(true);go(S.confirmed?2:1);
+})();
+</script>
+</body>
+</html>
